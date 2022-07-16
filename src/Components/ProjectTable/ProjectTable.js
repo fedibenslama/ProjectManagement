@@ -1,11 +1,13 @@
 import React from "react";
 import ProjectRead from "../ProjectRead/ProjectRead";
 import './ProjectTable.css'
+import { Fragment } from "react";
+import ProjectEdit from "../ProjectEdit/ProjectEdit";
 
-const ProjectTable = ({ ProjectsInfo }) => {
+const ProjectTable = ({ ProjectsInfo, EditProjectId, onProjectEditClick, onProjectEditChange, EditProjectData, onProjectEditSubmit, onProjectCancelClick, onProjectDeleteClick }) => {
     return (
         <div className="center shadow-5 br3 ba">
-            <form>
+            <form onSubmit={onProjectEditSubmit}>
                 <table className="TableForm">
                     <thead >
                         <tr>
@@ -20,7 +22,13 @@ const ProjectTable = ({ ProjectsInfo }) => {
                     </thead>
                     <tbody>
                         {ProjectsInfo.map((ProjectInfo) => (
-                            <ProjectRead ProjectInfo={ProjectInfo} />
+                            <Fragment>
+                                {EditProjectId === ProjectInfo.id
+                                    ? (<ProjectEdit EditProjectData={EditProjectData} onProjectEditChange={onProjectEditChange}
+                                        onProjectCancelClick={onProjectCancelClick} />)
+                                    : (<ProjectRead ProjectInfo={ProjectInfo} onProjectEditClick={onProjectEditClick}
+                                        onProjectDeleteClick={onProjectDeleteClick} />)}
+                            </Fragment>
                         ))}
 
                     </tbody>
