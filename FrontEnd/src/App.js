@@ -29,6 +29,9 @@ class App extends Component {
       },
     }
   }
+  
+
+
   onProjectAddChange = (event) => {
     event.preventDefault();
 
@@ -56,6 +59,27 @@ class App extends Component {
     };
     const NewProjects = [...this.state.ProjectsInfo, newProject];
     this.setState({ ProjectsInfo: NewProjects })
+
+    fetch('http://localhost:3001/addProject', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        Name: this.state.AddProjectData.Name,
+        Type: this.state.AddProjectData.Type,
+        UsedSolutions: this.state.AddProjectData.UsedSolutions,
+        AssociatedServers: this.state.AddProjectData.AssociatedServers,
+        AssociatedClient: this.state.AddProjectData.AssociatedClient,
+        Status: this.state.AddProjectData.Status,
+
+      })
+    })
+      .then(response => response.json())
+      // .then(Project => {
+      //   if (Project) {
+      //     // this.props.loadProject(Project)
+      //     console.log(response)
+      //   }
+      // })
 
   }
   onProjectEditClick = (event, ProjectInfo) => {
@@ -96,12 +120,17 @@ class App extends Component {
     NewProjects[index] = editedProject;
     this.setState({ ProjectsInfo: NewProjects })
     this.setState({ EditProjectId: null })
+
+
   }
+
+
+
   onProjectCancelClick = () => {
     this.setState({ EditProjectId: null })
   }
   onProjectDeleteClick = (projectId) => {
-    const NewProjects = [ ...this.state.ProjectsInfo ]
+    const NewProjects = [...this.state.ProjectsInfo]
     const index = this.state.ProjectsInfo.findIndex((ProjectInfo) => ProjectInfo.id === projectId);
     NewProjects.splice(index, 1);
     this.setState({ ProjectsInfo: NewProjects })
@@ -115,7 +144,7 @@ class App extends Component {
         <ProjectTable ProjectsInfo={this.state.ProjectsInfo} EditProjectId={this.state.EditProjectId}
           onProjectEditClick={this.onProjectEditClick} EditProjectData={this.state.EditProjectData}
           onProjectEditChange={this.onProjectEditChange} onProjectEditSubmit={this.onProjectEditSubmit}
-          onProjectCancelClick={this.onProjectCancelClick} onProjectDeleteClick={this.onProjectDeleteClick}/>
+          onProjectCancelClick={this.onProjectCancelClick} onProjectDeleteClick={this.onProjectDeleteClick} />
         <ProjectAdd onProjectAddChange={this.onProjectAddChange} onProjectAddSubmit={this.onProjectAddSubmit} />
       </div>
     );
