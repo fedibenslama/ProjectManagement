@@ -4,6 +4,7 @@ import './ProjectTable.css'
 import { Fragment } from "react";
 import ProjectEdit from "../ProjectEdit/ProjectEdit";
 
+
 const ProjectTable = ({ ProjectsInfo, EditProjectId, onProjectEditClick, onProjectEditChange, EditProjectData, onProjectEditSubmit, onProjectCancelClick, onProjectDeleteClick }) => {
     return (
         <div className="center shadow-5 br3 ba">

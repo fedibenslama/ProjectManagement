@@ -31,7 +31,7 @@ class App extends Component {
   }
   
 
-
+//----------------------Project ADD---------------------------------
   onProjectAddChange = (event) => {
     event.preventDefault();
 
@@ -82,6 +82,7 @@ class App extends Component {
       // })
 
   }
+  //----------------------Project Edit---------------------------------
   onProjectEditClick = (event, ProjectInfo) => {
     event.preventDefault();
     this.setState({ EditProjectId: ProjectInfo.id })
@@ -121,10 +122,25 @@ class App extends Component {
     this.setState({ ProjectsInfo: NewProjects })
     this.setState({ EditProjectId: null })
 
+    fetch('http://localhost:3001/EditProject', {
+      method: 'put',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        Name: this.state.EditProjectData.Name,
+        Type: this.state.EditProjectData.Type,
+        UsedSolutions: this.state.EditProjectData.UsedSolutions,
+        AssociatedServers: this.state.EditProjectData.AssociatedServers,
+        AssociatedClient: this.state.EditProjectData.AssociatedClient,
+        Status: this.state.EditProjectData.Status,
+
+      })
+    })
+      .then(response => response.json())
+
 
   }
 
-
+//----------------------Project Cancel and Delete---------------------------------
 
   onProjectCancelClick = () => {
     this.setState({ EditProjectId: null })
@@ -134,6 +150,8 @@ class App extends Component {
     const index = this.state.ProjectsInfo.findIndex((ProjectInfo) => ProjectInfo.id === projectId);
     NewProjects.splice(index, 1);
     this.setState({ ProjectsInfo: NewProjects })
+
+    
   }
 
 
