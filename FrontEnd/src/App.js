@@ -1,6 +1,5 @@
 import './App.css';
 import React, { Component } from 'react';
-import ProjectData from './project-mockdata.json'
 import ProjectTable from './Components/ProjectTable/ProjectTable';
 import ProjectAdd from './Components/ProjectAdd/ProjectAdd';
 import { nanoid } from 'nanoid';
@@ -9,7 +8,14 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      ProjectsInfo: ProjectData,
+      ProjectsInfo: [{
+        Name: '',
+        Type: '',
+        UsedSolutions: '',
+        AssociatedServers: '',
+        AssociatedClient: '',
+        Status: '',
+      }],
       AddProjectData: {
         Name: '',
         Type: '',
@@ -19,19 +25,43 @@ class App extends Component {
         Status: '',
       },
       EditProjectId: null,
-      EditProjectData: {
+      EditProjectData: [{
         Name: '',
         Type: '',
         UsedSolutions: '',
         AssociatedServers: '',
         AssociatedClient: '',
         Status: '',
-      },
+      }],
     }
   }
-  
 
-//----------------------Project ADD---------------------------------
+  componentDidMount() {
+    fetch('http://localhost:3001/projects')
+      .then(response => {
+        return response.json();
+      })
+      .then(projects => {
+        this.setState({ ProjectsInfo: projects })
+      })
+      
+
+
+  }
+
+  // componentDidUpdate(prevProps,prevState) {
+  //   if (prevState.ProjectsInfo !== this.state.ProjectsInfo) {
+  //     fetch('http://localhost:3001/projects')
+  //       .then(response => {
+  //         return response.json();
+  //       })
+  //       .then(projects => {
+  //         this.setState({ ProjectsInfo: projects })
+  //       })
+  //   }
+  // }
+
+  //----------------------Project ADD---------------------------------
   onProjectAddChange = (event) => {
     event.preventDefault();
 
@@ -74,12 +104,12 @@ class App extends Component {
       })
     })
       .then(response => response.json())
-      // .then(Project => {
-      //   if (Project) {
-      //     // this.props.loadProject(Project)
-      //     console.log(response)
-      //   }
-      // })
+    // .then(Project => {
+    //   if (Project) {
+    //     // this.props.loadProject(Project)
+    //     console.log(response)
+    //   }
+    // })
 
   }
   //----------------------Project Edit---------------------------------
@@ -126,6 +156,7 @@ class App extends Component {
       method: 'put',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        id: this.state.EditProjectId,
         Name: this.state.EditProjectData.Name,
         Type: this.state.EditProjectData.Type,
         UsedSolutions: this.state.EditProjectData.UsedSolutions,
@@ -136,22 +167,30 @@ class App extends Component {
       })
     })
       .then(response => response.json())
-
-
+      
   }
 
-//----------------------Project Cancel and Delete---------------------------------
+  //----------------------Project Cancel---------------------------------
 
   onProjectCancelClick = () => {
     this.setState({ EditProjectId: null })
   }
+  //--------------------Project Delete ------------------------
   onProjectDeleteClick = (projectId) => {
     const NewProjects = [...this.state.ProjectsInfo]
     const index = this.state.ProjectsInfo.findIndex((ProjectInfo) => ProjectInfo.id === projectId);
     NewProjects.splice(index, 1);
     this.setState({ ProjectsInfo: NewProjects })
 
-    
+    fetch('http://localhost:3001/DeleteProject', {
+      method: 'put',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: projectId
+
+      })
+    })
+      .then(response => response.json())
   }
 
 
@@ -162,7 +201,8 @@ class App extends Component {
         <ProjectTable ProjectsInfo={this.state.ProjectsInfo} EditProjectId={this.state.EditProjectId}
           onProjectEditClick={this.onProjectEditClick} EditProjectData={this.state.EditProjectData}
           onProjectEditChange={this.onProjectEditChange} onProjectEditSubmit={this.onProjectEditSubmit}
-          onProjectCancelClick={this.onProjectCancelClick} onProjectDeleteClick={this.onProjectDeleteClick} />
+          onProjectCancelClick={this.onProjectCancelClick} onProjectDeleteClick={this.onProjectDeleteClick}
+        />
         <ProjectAdd onProjectAddChange={this.onProjectAddChange} onProjectAddSubmit={this.onProjectAddSubmit} />
       </div>
     );

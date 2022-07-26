@@ -1,14 +1,14 @@
 import React from "react";
 
-const ProjectRead = ({ ProjectInfo, onProjectEditClick,onProjectDeleteClick }) => {
+const ProjectRead = ({name,Type, UsedSolutions,AssociatedServers,AssociatedClient,Status,id, onProjectEditClick,onProjectDeleteClick ,ProjectInfo}) => {
     return (
         <tr>
-            <td>{ProjectInfo.Name}</td>
-            <td>{ProjectInfo.Type}</td>
-            <td>{ProjectInfo.UsedSolutions}</td>
-            <td>{ProjectInfo.AssociatedServers}</td>
-            <td>{ProjectInfo.AssociatedClient}</td>
-            <td>{ProjectInfo.Status}</td>
+            <td>{name}</td>
+            <td>{Type}</td>
+            <td>{UsedSolutions}</td>
+            <td>{AssociatedServers}</td>
+            <td>{AssociatedClient}</td>
+            <td>{Status}</td>
             <td>
                 {/* <button type="button" onClick={(event)=> onProjectEditClick(event,ProjectInfo)}>Edit</button> */}
                 <div className="">
@@ -24,7 +24,7 @@ const ProjectRead = ({ ProjectInfo, onProjectEditClick,onProjectDeleteClick }) =
                         className="b ph3 pv2 input-reset ba b--white bg-transparent grow pointer f6 dib"
                         type="submit"
                         value="Delete"
-                        onClick={() => onProjectDeleteClick(ProjectInfo.id)}
+                        onClick={() => onProjectDeleteClick(id)}
                     />
                 </div>
 
